@@ -95,7 +95,7 @@ public class Funcionalidad {
         return conexionRPC;
     }
     
-    public String procesamientoRMI(int opc, int x1, int x2) throws RemoteException{        
+    public String procesamientoRMI(int opc, int x1, int x2) throws RemoteException, NotBoundException, MalformedURLException{        
         float resultado = 0;
         
         if(opc == 1){
@@ -107,8 +107,9 @@ public class Funcionalidad {
             System.out.println("La resta es: " + resultado);
             return "La resta es: " + resultado;
         }else if(opc == 3){
-            System.out.println("Apagar RMI");
-            return "Apagar RMI";
+            System.out.println("Servidor RMI desconectado");
+            sRMI.apagaRMI();
+            return "Servidor RMI desconectado";
         }else{
             System.out.println("Opcion no valida");
             return "Opcion no valida";
