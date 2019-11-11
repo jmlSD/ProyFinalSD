@@ -9,6 +9,7 @@ public class Client {
     
     public static void main(String[] args) {
         int x1=0, x2=0;
+        String c1 = "";
         try{
             XmlRpcClient rpcClient = new XmlRpcClient("http://localhost:8080/");
             Vector<Integer> params = new Vector<Integer>();
@@ -34,11 +35,15 @@ public class Client {
             opc = sc.nextInt();// 1 o 2
             if(opc > 0 && opc < 3){
                 System.out.println("Dame los valores de x1 y x2");
-                x1 = sc.nextInt();
-                x2 = sc.nextInt();
+                //x1 = sc.nextInt();
+                //x2 = sc.nextInt();
+                c1 = sc.nextLine();
             }
             if(opc2 == 1){
-                //Hacer aqui lo de Sockets
+                params.add(new Integer(opc));
+                params.add(new Integer(c1));            
+                Object procOper = rpcClient.execute("myServer.procesamientoSCK", params);
+                System.out.println(procOper);
             }else if(opc2 == 2){
                 params.add(new Integer(opc));
                 params.add(new Integer(x1));

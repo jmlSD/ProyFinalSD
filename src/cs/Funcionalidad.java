@@ -1,8 +1,10 @@
 package cs;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import static java.lang.Thread.sleep;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
@@ -10,13 +12,15 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
-import java.util.logging.*;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
 import serverrmi.*;
 import serverrpc.*;
 
 public class Funcionalidad {
+    Socket conexionSCK;
+    DataInputStream dis;
+    DataOutputStream dos;
     XmlRpcClient conexionRPC;    
     Server_rpc srpc;
     InterfazRMI interfazRMI;
@@ -27,11 +31,18 @@ public class Funcionalidad {
         return "----- Bienvenido al Sistema Jhonys -----\n¿Con qué tipo de servidor desear trabajar?\n1.- Sockets\n2.- RPC\n3.- RMI\n\n"
                 + "Presiona el numero correspondiente a la opción: ";
     }
-    public String solicitudMenu(int opc){
+    
+    public String solicitudMenu(int opc) throws IOException{
         String resultado = "";
         if(opc == 1){
             
-            return "Llamar a Sockets";
+            this.conexionSCK = conectaSCK(); 
+            
+            this.dos  = new DataOutputStream(conexionSCK.getOutputStream());
+            this.dis = new DataInputStream(conexionSCK.getInputStream());
+            
+            String menu = dis.readUTF() + dis.readUTF() + dis.readUTF() + dis.readUTF();
+            return menu;
             
         }else if(opc == 2){
             try{
@@ -59,6 +70,7 @@ public class Funcionalidad {
         }else{
             return "Opcion no valida";
         }        
+        //return null;
     }
     
     public String procesamientoRPC(int opc, int x1, int x2) throws XmlRpcException, IOException{
@@ -126,5 +138,32 @@ public class Funcionalidad {
         
         return interfazRMI;
     }
-        
+    
+    public Socket conectaSCK() throws IOException {
+        Socket sk = new Socket("localhost", 8080);
+        return sk;
+    }
+    
+    public String procesamientoSCK(int opc, String x1) throws RemoteException, NotBoundException, MalformedURLException, IOException{        
+
+        int aux = -1;
+        int resultado = 0;
+
+        while(aux != 3){
+
+            aux = opc;
+            dos.writeInt(aux);
+
+            System.out.println(dis.readUTF());
+            String s = x1;
+            dos.writeUTF(s);
+            resultado = dis.readInt();
+            System.out.println(resultado);
+    }
+        dis.close();
+        dos.close();
+        conexionSCK.close();
+    return "el numero es" + resultado;
+    }
 }
+
