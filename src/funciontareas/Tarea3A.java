@@ -5,7 +5,7 @@ import hilostareas.HiloA2;
 import hilostareas.HiloA3;
 
 
-public class Principal{    
+public class Tarea3A{    
     public int tareaA(String letra) throws InterruptedException{
         HiloA1 hilo1 = new HiloA1();    
         hilo1.setPriority(10);

@@ -4,7 +4,7 @@ import hilostareas.HiloA1;
 import hilostareas.HiloB2;
 import java.io.IOException;
 
-public class UsoHilos {
+public class Tarea3B {
     
     private int numeroApariciones = 0;
     
