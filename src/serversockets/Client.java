@@ -9,7 +9,7 @@ public class Client {
     public static void main(String[] args) throws InterruptedException {
         
         try{
-            Socket sk = new Socket("localhost", 8080);
+            Socket sk = new Socket("localhost", 8084);
             Scanner scan = new Scanner(System.in);
             
             DataOutputStream dos  = new DataOutputStream(sk.getOutputStream());

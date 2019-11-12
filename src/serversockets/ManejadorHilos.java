@@ -1,7 +1,6 @@
 package serversockets;
 
-import funciontareas.Principal;
-import funciontareas.UsoHilos;
+import funciontareas.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.logging.*;
@@ -13,37 +12,55 @@ public class ManejadorHilos implements Runnable {
     private FileWriter fileW;
     private Socket sk;
     private int id;
+    private int aux, opc;
 
-    public ManejadorHilos(Socket sk, int id) {
+    public ManejadorHilos(Socket sk, int id,int aux) {
         this.sk = sk;
         this.id = id;
+        this.aux = aux;
     }
     
     @Override 
     public void run(){
-        System.out.println("conexion " + id + " recibida--->"+ sk.getInetAddress().getHostName());
-        try {                       
-            dis = new DataInputStream(sk.getInputStream());
-            dos = new DataOutputStream((sk.getOutputStream()));
+        System.out.println("conexion SCK " + id + " recibida--->"+ sk.getInetAddress().getHostName());
+        try {         
+            System.out.println("antes de los flujpos");
+            this.dis = new DataInputStream(sk.getInputStream());
+            this.dos = new DataOutputStream((sk.getOutputStream()));
             
-            while(true){
-            dos.writeUTF("Elige una opcion:");
-            dos.writeUTF("1.- Buscar una letra");
-            dos.writeUTF("2.- Buscar una palabra");
-            dos.writeUTF("3.- Salir");                       
+            System.out.println("estoy en en while");
+            System.out.println(aux);
+                if(this.aux == 0){
+                    dos.writeUTF("Elige una opcion:");
+                    dos.writeUTF("1.- Buscar una letra");
+                    dos.writeUTF("2.- Buscar una palabra");
+                    dos.writeUTF("3.- Salir");  
+                }else if(this.aux==1){
             
-            int opc = dis.readInt();
+            
+            System.out.println("Espero una opcion");
+            //int variable = dis.readInt();
+            
+            //System.out.println("la opc escogida en aux = 1 " + variable);
+            
+                }else if(this.aux == 2){
+                    //System.out.println("aux =2" + dis.readUTF());
+                    opc = dis.readInt();
+                    System.out.println("lei opc" + opc);
+                    String dato = dis.readUTF();
+                
             switch(opc){
                 case 1:
-                    dos.writeUTF("Letra a buscar: ");
-                    Principal p = new Principal();
-                    dos.writeInt(p.tareaA(dis.readUTF()));
+                    //dos.writeUTF("Letra a buscar: ");
+                    //String dato = dis.readUTF();
+                    Tarea3A p = new Tarea3A();
+                    dos.writeInt(p.tareaA(dato));
                     //System.out.println(dis.readInt());                    
                 break;
                 case 2:
-                    dos.writeUTF("Palabra a buscar: ");
-                    UsoHilos h = new UsoHilos();
-                    h.tareaB(dis.readUTF());
+                    //dos.writeUTF("Palabra a buscar: ");
+                    Tarea3B h = new Tarea3B();
+                    h.tareaB(dato);
                     dos.writeInt(h.getApariciones());
                     //System.out.println(dis.readInt());                    
                 break;
@@ -54,15 +71,21 @@ public class ManejadorHilos implements Runnable {
                     dos.writeUTF("La opción ingresada no es válida");
                 break;
             }
-            }
-
-        } catch (IOException ex) {
-            System.out.println("Terminado " + ex);
+                }else{
+                    System.out.println("Estoy en else");
+                }
+            //aux = 0;
+            //return;
+                
+            } catch (IOException ex) {
+            Logger.getLogger(ManejadorHilos.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
             Logger.getLogger(ManejadorHilos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-    }
-    
-    
+
+        }
 }
+    
+    
+    
+
